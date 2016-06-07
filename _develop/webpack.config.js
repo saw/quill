@@ -2,6 +2,7 @@ var path = require('path');
 var pkg = require('../package.json');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+// var UglifyPlugin = require()
 
 var bannerPack = new webpack.BannerPlugin(
   'Quill Editor v' + pkg.version + '\n' +
@@ -25,7 +26,7 @@ module.exports = {
   output: {
     filename: '[name]',
     library: 'Quill',
-    libraryTarget: 'umd',
+    // libraryTarget: 'umd',
     path: 'dist/'
   },
   resolve: {
@@ -63,7 +64,9 @@ module.exports = {
     },
     silent: true
   },
-  plugins: [ bannerPack, constantPack, new ExtractTextPlugin('[name].css', { allChunks: true }) ],
+  plugins: [ bannerPack, constantPack, new ExtractTextPlugin('[name].css', { allChunks: true }),  new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false }
+    })   ],
   devtool: 'source-map',
   devServer: {
     hot: false,

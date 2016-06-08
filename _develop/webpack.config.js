@@ -65,7 +65,7 @@ module.exports = {
     silent: true
   },
   plugins: [ bannerPack, constantPack, new ExtractTextPlugin('[name].css', { allChunks: true }),  new webpack.optimize.UglifyJsPlugin({
-      compress: { warnings: false }
+      compress: { warnings: false },beautify: true
     })   ],
   devtool: 'source-map',
   devServer: {

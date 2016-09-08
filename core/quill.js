@@ -352,7 +352,7 @@ function expandConfig(container, userConfig) {
   }, {});
   // Special case toolbar shorthand
   if (userConfig.modules != null && userConfig.modules.toolbar != null &&
-      userConfig.modules.toolbar.constructor !== Object) {
+      userConfig.modules.toolbar  === Object(userConfig.modules.toolbar)) {
     userConfig.modules.toolbar = {
       container: userConfig.modules.toolbar
     };

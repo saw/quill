@@ -32,6 +32,7 @@ var source = [
 
 module.exports = function(env) {
   let config = {
+    devtool: 'source-map',
     context: path.resolve(__dirname, '..'),
     entry: {
       'quill.js': ['./quill.js'],

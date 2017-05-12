@@ -8,6 +8,9 @@ class Emitter extends EventEmitter {
   constructor() {
     super();
     this.on('error', debug.error);
+    this.on('compositionstart', function(e) {
+      console.log('compstart', e);
+    });
   }
 
   emit() {
@@ -22,7 +25,9 @@ Emitter.events = {
   SCROLL_OPTIMIZE      : 'scroll-optimize',
   SCROLL_UPDATE        : 'scroll-update',
   SELECTION_CHANGE     : 'selection-change',
-  TEXT_CHANGE          : 'text-change'
+  TEXT_CHANGE          : 'text-change',
+  COMPOSITIONSTART     : 'compositionstart',
+  COMPOSITIONEND       : 'compositionend'
 };
 Emitter.sources = {
   API    : 'api',

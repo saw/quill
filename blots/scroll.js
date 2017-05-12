@@ -15,6 +15,8 @@ class Scroll extends Parchment.Scroll {
   constructor(domNode, config) {
     super(domNode);
     this.emitter = config.emitter;
+    this.IMEopen = false;
+    this.pendingMutation = null;
     this.scrollingContainer = config.scrollingContainer;
     if (Array.isArray(config.whitelist)) {
       this.whitelist = config.whitelist.reduce(function(whitelist, format) {
@@ -22,6 +24,15 @@ class Scroll extends Parchment.Scroll {
         return whitelist;
       }, {});
     }
+    this.scrollingContainer.addEventListener(Emitter.events.COMPOSITIONSTART, function() {
+      this.IMEopen = true;
+    }.bind(this));
+
+    this.scrollingContainer.addEventListener(Emitter.events.COMPOSITIONEND, function() {
+      this.IMEopen = false;
+      this.update([this.lastMutation]);
+    }.bind(this));
+
     this.optimize();
     this.enable();
   }
@@ -121,6 +132,12 @@ class Scroll extends Parchment.Scroll {
   }
 
   update(mutations) {
+    this.lastMutation = mutations && mutations[mutations.length - 1];
+    if (this.IMEopen) {
+      return
+    }else {
+      console.log(mutations);
+    }
     if (this.batch === true) return;
     let source = Emitter.sources.USER;
     if (typeof mutations === 'string') {
@@ -129,9 +146,11 @@ class Scroll extends Parchment.Scroll {
     if (!Array.isArray(mutations)) {
       mutations = this.observer.takeRecords();
     }
+
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_BEFORE_UPDATE, source, mutations);
     }
+    // console.log(mutations[0] && mutations[0].target);
     super.update(mutations.concat([]));   // pass copy
     if (mutations.length > 0) {
       this.emitter.emit(Emitter.events.SCROLL_UPDATE, source, mutations);

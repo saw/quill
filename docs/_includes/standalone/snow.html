@@ -13,7 +13,7 @@
 </style>
 <!-- head -->
 <div class="standalone-container">
-  <div id="snow-container"></div>
+  <div id="snow-container">s</div>
 </div>
 <!-- script -->
 <script type="text/javascript" src="{{site.katex}}/katex.min.js"></script>
@@ -24,5 +24,33 @@
     placeholder: 'Compose an epic...',
     theme: 'snow'
   });
+  var ed = document.getElementById('snow-container');
+
+  function fixIt() {
+    console.log('fix');
+    var children = ed.querySelectorAll('p');
+    children.forEach((child) => {
+      if(child.textContent.length === 0) {
+        child.textContent = '\u21d0';
+      }
+      if(child.textContent.length >= 3) {
+        child.textContent = child.textContent.replace('\u21d0', 'x')
+      }
+    });
+  }
+  // ed.addEventListener('keydown', fixIt);
+  ed.addEventListener('compositionstart', fixIt);
+
+
+  quill.on('selection-change', function(e) {
+    console.log('length', quill.getLength());
+    console.log('text', quill.getText());
+    var text = quill.getText().replace(/\n/, '');
+    console.log('text len', text.length);
+    if(!quill.hasFocus() && text == '\u21d0') {
+      quill.setText('');
+    }
+    console.log('has focus', quill.hasFocus());
+  })
 </script>
 <!-- script -->

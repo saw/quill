@@ -15,6 +15,7 @@ class Scroll extends Parchment.Scroll {
   constructor(domNode, config) {
     super(domNode);
     this.emitter = config.emitter;
+    this.IMEMode = false;
     if (Array.isArray(config.whitelist)) {
       this.whitelist = config.whitelist.reduce(function(whitelist, format) {
         whitelist[format] = true;
@@ -22,7 +23,12 @@ class Scroll extends Parchment.Scroll {
       }, {});
     }
     // Some reason fixes composition issues with character languages in Windows/Chrome, Safari
-    this.domNode.addEventListener('DOMNodeInserted', function() {});
+    this.domNode.addEventListener('compositionstart', () => {
+      if(!this.IMEMode) {
+        this.domNode.addEventListener('DOMNodeInserted', function() {});
+        this.IMEMode = true;
+      }
+    });
     this.optimize();
     this.enable();
   }
